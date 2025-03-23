@@ -35,14 +35,15 @@ from tqdm import tqdm
 from collections import deque
 from scipy.spatial.transform import Rotation as R
 from humanoid import LEGGED_GYM_ROOT_DIR
-from humanoid.envs import XBotLCfg
+# from humanoid.envs import XBotLCfg
+from humanoid.envs import XuanwuCfg
 import torch
 
 
 class cmd:
-    vx = 0.4
+    vx = 0.0
     vy = 0.0
-    dyaw = 0.0
+    dyaw = 0.5
 
 
 def quaternion_to_euler_array(quat):
@@ -109,6 +110,17 @@ def run_mujoco(policy, cfg):
         hist_obs.append(np.zeros([1, cfg.env.num_single_obs], dtype=np.double))
 
     count_lowlevel = 0
+    default_angle = np.zeros((cfg.env.num_actions),dtype=np.double)
+    default_angle[0]=cfg.init_state.default_joint_angles['joint_1']
+    default_angle[1]=cfg.init_state.default_joint_angles['joint_2']
+    default_angle[2]=cfg.init_state.default_joint_angles['joint_3']
+    default_angle[3]=cfg.init_state.default_joint_angles['joint_4']
+    default_angle[4]=cfg.init_state.default_joint_angles['joint_5']
+    default_angle[5]=cfg.init_state.default_joint_angles['joint_6']
+    default_angle[6]=cfg.init_state.default_joint_angles['joint_7']
+    default_angle[7]=cfg.init_state.default_joint_angles['joint_8']
+    default_angle[8]=cfg.init_state.default_joint_angles['joint_9']
+    default_angle[9]=cfg.init_state.default_joint_angles['joint_10']
 
 
     for _ in tqdm(range(int(cfg.sim_config.sim_duration / cfg.sim_config.dt)), desc="Simulating..."):
@@ -130,16 +142,18 @@ def run_mujoco(policy, cfg):
             obs[0, 2] = cmd.vx * cfg.normalization.obs_scales.lin_vel
             obs[0, 3] = cmd.vy * cfg.normalization.obs_scales.lin_vel
             obs[0, 4] = cmd.dyaw * cfg.normalization.obs_scales.ang_vel
-            obs[0, 5:17] = q * cfg.normalization.obs_scales.dof_pos
-            obs[0, 17:29] = dq * cfg.normalization.obs_scales.dof_vel
-            obs[0, 29:41] = action
-            obs[0, 41:44] = omega
-            obs[0, 44:47] = eu_ang
+            obs[0, 5:15] = (q-default_angle) * cfg.normalization.obs_scales.dof_pos
+            obs[0, 15:25] = dq * cfg.normalization.obs_scales.dof_vel
+            obs[0, 25:35] = action
+            obs[0, 35:38] = omega
+            obs[0, 38:41] = eu_ang
 
             obs = np.clip(obs, -cfg.normalization.clip_observations, cfg.normalization.clip_observations)
 
             hist_obs.append(obs)
             hist_obs.popleft()
+
+            print("hist_obs: ", hist_obs)
 
             policy_input = np.zeros([1, cfg.env.num_observations], dtype=np.float32)
             for i in range(cfg.env.frame_stack):
@@ -147,7 +161,10 @@ def run_mujoco(policy, cfg):
             action[:] = policy(torch.tensor(policy_input))[0].detach().numpy()
             action = np.clip(action, -cfg.normalization.clip_actions, cfg.normalization.clip_actions)
 
-            target_q = action * cfg.control.action_scale
+            if count_lowlevel>200:
+                target_q = action * cfg.control.action_scale+default_angle
+            else:
+                target_q = default_angle
 
 
         target_dq = np.zeros((cfg.env.num_actions), dtype=np.double)
@@ -170,24 +187,26 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Deployment script.')
     parser.add_argument('--load_model', type=str, required=True,
                         help='Run to load from.')
-    parser.add_argument('--terrain', action='store_true', help='terrain or plane')
+    parser.add_argument('--terrain', action='store_true', default= 'plane', help='terrain or plane')
     args = parser.parse_args()
 
-    class Sim2simCfg(XBotLCfg):
+    class Sim2simCfg(XuanwuCfg):
 
         class sim_config:
             if args.terrain:
-                mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/XBot/mjcf/XBot-L-terrain.xml'
+                # mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/XBot/mjcf/XBot-L-terrain.xml'
+                mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/Xuanwu/mjcf/Xuanwu.xml'
             else:
-                mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/XBot/mjcf/XBot-L.xml'
+                # mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/XBot/mjcf/XBot-L.xml'
+                mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/Xuanwu/mjcf/Xuanwu.xml'
             sim_duration = 60.0
             dt = 0.001
             decimation = 10
 
         class robot_config:
-            kps = np.array([200, 200, 350, 350, 15, 15, 200, 200, 350, 350, 15, 15], dtype=np.double)
-            kds = np.array([10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10], dtype=np.double)
-            tau_limit = 200. * np.ones(12, dtype=np.double)
+            kps = np.array([30, 30, 30, 30, 10, 30, 30, 30, 30, 10], dtype=np.double)
+            kds = np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1], dtype=np.double)
+            tau_limit = 7. * np.ones(10, dtype=np.double)
 
     policy = torch.jit.load(args.load_model)
     run_mujoco(policy, Sim2simCfg())

@@ -33,10 +33,13 @@
 from humanoid import LEGGED_GYM_ROOT_DIR, LEGGED_GYM_ENVS_DIR
 from .base.legged_robot import LeggedRobot
 
-from .custom.humanoid_config import XBotLCfg, XBotLCfgPPO
-from .custom.humanoid_env import XBotLFreeEnv
+# from .custom.humanoid_config import XBotLCfg, XBotLCfgPPO
+# from .custom.humanoid_env import XBotLFreeEnv
+
+from .xuanwu.xuanwu_config import XuanwuCfg, XuanwuCfgPPO
+from .xuanwu.xuanwu_env import XuanwuFreeEnv
 
 from humanoid.utils.task_registry import task_registry
 
-
-task_registry.register( "humanoid_ppo", XBotLFreeEnv, XBotLCfg(), XBotLCfgPPO() )
+# task_registry.register( "humanoid_ppo", XBotLFreeEnv, XBotLCfg(), XBotLCfgPPO() )
+task_registry.register( "humanoid_ppo", XuanwuFreeEnv, XuanwuCfg(), XuanwuCfgPPO() )

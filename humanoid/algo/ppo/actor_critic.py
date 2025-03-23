@@ -110,6 +110,8 @@ class ActorCritic(nn.Module):
 
     def update_distribution(self, observations):
         mean = self.actor(observations)
+        with torch.no_grad():  # Ensure we don’t track gradients while clamping
+            self.std.data.clamp_(min=1e-6, max=2.0)
         self.distribution = Normal(mean, mean*0. + self.std)
 
     def act(self, observations, **kwargs):

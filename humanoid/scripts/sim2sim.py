@@ -42,8 +42,8 @@ import torch
 
 class cmd:
     vx = 0.0
-    vy = 0.0
-    dyaw = 0.5
+    vy = 0.5
+    dyaw = 0.0
 
 
 def quaternion_to_euler_array(quat):
@@ -101,7 +101,8 @@ def run_mujoco(policy, cfg):
     data = mujoco.MjData(model)
     mujoco.mj_step(model, data)
     viewer = mujoco_viewer.MujocoViewer(model, data)
-
+    body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "base_link")
+    data.xfrc_applied[body_id] = 0 
     target_q = np.zeros((cfg.env.num_actions), dtype=np.double)
     action = np.zeros((cfg.env.num_actions), dtype=np.double)
 
@@ -153,8 +154,6 @@ def run_mujoco(policy, cfg):
             hist_obs.append(obs)
             hist_obs.popleft()
 
-            print("hist_obs: ", hist_obs)
-
             policy_input = np.zeros([1, cfg.env.num_observations], dtype=np.float32)
             for i in range(cfg.env.frame_stack):
                 policy_input[0, i * cfg.env.num_single_obs : (i + 1) * cfg.env.num_single_obs] = hist_obs[i][0, :]
@@ -166,6 +165,13 @@ def run_mujoco(policy, cfg):
             else:
                 target_q = default_angle
 
+            if count_lowlevel % int(0.5 / cfg.sim_config.dt) == 0:
+                fx = np.random.uniform(-500, 500)
+                fy = np.random.uniform(-500, 500)
+                data.xfrc_applied[body_id, :3] = [fx, fy, 0]
+                print("Applying disturbance")
+            else:
+                data.xfrc_applied[body_id] = 0
 
         target_dq = np.zeros((cfg.env.num_actions), dtype=np.double)
         # Generate PD control
@@ -204,8 +210,8 @@ if __name__ == '__main__':
             decimation = 10
 
         class robot_config:
-            kps = np.array([30, 30, 30, 30, 10, 30, 30, 30, 30, 10], dtype=np.double)
-            kds = np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1], dtype=np.double)
+            kps = np.array([20, 80, 20, 20, 10, 20, 80, 20, 20, 10], dtype=np.double)
+            kds = np.array([2, 2, 2, 2, 2, 2, 2, 2, 2, 2], dtype=np.double)
             tau_limit = 7. * np.ones(10, dtype=np.double)
 
     policy = torch.jit.load(args.load_model)

@@ -38,13 +38,12 @@ from humanoid import LEGGED_GYM_ROOT_DIR
 # from humanoid.envs import XBotLCfg
 from humanoid.envs import XuanwuCfg
 import torch
-
+import glfw
 
 class cmd:
     vx = 0.0
-    vy = 0.5
+    vy = 0.0
     dyaw = 0.0
-
 
 def quaternion_to_euler_array(quat):
     # Ensure quaternion is in the correct format [x, y, z, w]
@@ -101,6 +100,39 @@ def run_mujoco(policy, cfg):
     data = mujoco.MjData(model)
     mujoco.mj_step(model, data)
     viewer = mujoco_viewer.MujocoViewer(model, data)
+    original_callback = glfw.set_key_callback(viewer.window, None)
+    glfw.set_key_callback(viewer.window, original_callback)
+
+    def key_callback(window, key, scancode, action, mods):
+        if action not in [glfw.PRESS, glfw.RELEASE]:
+            return
+        # Booleans for "pressing" vs "releasing"
+        is_press = (action == glfw.PRESS)
+        sign = 1.0 if is_press else 0.0
+
+        if key == glfw.KEY_I:
+            # Forward velocity
+            cmd.vy = 0.5 * sign
+        elif key == glfw.KEY_K:
+            # Backward velocity
+            cmd.vy = -0.5 * sign
+        elif key == glfw.KEY_J:
+            # Left velocity
+            cmd.vx = -0.5 * sign
+        elif key == glfw.KEY_L:
+            # Right velocity
+            cmd.vx = 0.5 * sign
+        elif key == glfw.KEY_U:
+            # Yaw left
+            cmd.dyaw = 0.5 * sign
+        elif key == glfw.KEY_O:
+            # Yaw right
+            cmd.dyaw = -0.5 * sign
+        else:
+            if original_callback is not None:
+                original_callback(window, key, scancode, action, mods)
+
+    glfw.set_key_callback(viewer.window, key_callback)
     body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "base_link")
     data.xfrc_applied[body_id] = 0 
     target_q = np.zeros((cfg.env.num_actions), dtype=np.double)
@@ -168,10 +200,12 @@ def run_mujoco(policy, cfg):
             if count_lowlevel % int(0.5 / cfg.sim_config.dt) == 0:
                 fx = np.random.uniform(-500, 500)
                 fy = np.random.uniform(-500, 500)
-                data.xfrc_applied[body_id, :3] = [fx, fy, 0]
-                print("Applying disturbance")
+                data.xfrc_applied[body_id, :3] = [0, 0, 0]
+                i = 0
             else:
-                data.xfrc_applied[body_id] = 0
+                i = i + 1
+                if i > 10:
+                    data.xfrc_applied[body_id] = 0
 
         target_dq = np.zeros((cfg.env.num_actions), dtype=np.double)
         # Generate PD control

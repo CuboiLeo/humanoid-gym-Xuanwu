@@ -152,7 +152,7 @@ class XuanwuCfg(LeggedRobotCfg):
         randomize_friction = True
         friction_range = [0.1, 2.0]
         randomize_base_mass = True
-        added_mass_range = [-1.0, 1.0]
+        added_mass_range = [-0.2, 0.2]
         push_robots = True
         push_interval_s = 4
         max_push_vel_xy = 0.4

@@ -96,7 +96,6 @@ class XuanwuFreeEnv(LeggedRobot):
 
         self.gym.set_actor_root_state_tensor(
             self.sim, gymtorch.unwrap_tensor(self.root_states))
-
     def  _get_phase(self):
         cycle_time = self.cfg.rewards.cycle_time
         phase = self.episode_length_buf * self.dt / cycle_time
@@ -231,7 +230,7 @@ class XuanwuFreeEnv(LeggedRobot):
             self.rand_push_force[:, :2],  # 2
             self.rand_push_torque,  # 3
             self.env_frictions,  # 1
-            self.body_mass / 30.,  # 1
+            self.body_mass / 30.,  # 1 # 30
             stance_mask,  # 2
             contact_mask,  # 2
         ), dim=-1)

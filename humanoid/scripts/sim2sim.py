@@ -235,7 +235,7 @@ if __name__ == '__main__':
         class sim_config:
             if args.terrain:
                 # mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/XBot/mjcf/XBot-L-terrain.xml'
-                mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/Xuanwu/mjcf/Xuanwu.xml'
+                mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/Xuanwu/mjcf/Xuanwu-terrain.xml'
             else:
                 # mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/XBot/mjcf/XBot-L.xml'
                 mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/Xuanwu/mjcf/Xuanwu.xml'
@@ -244,8 +244,8 @@ if __name__ == '__main__':
             decimation = 10
 
         class robot_config:
-            kps = np.array([20, 80, 20, 20, 10, 20, 80, 20, 20, 10], dtype=np.double)
-            kds = np.array([2, 2, 2, 2, 2, 2, 2, 2, 2, 2], dtype=np.double)
+            kps = np.array([40, 40, 40, 40, 10, 40, 40, 40, 40, 10], dtype=np.double)
+            kds = np.array([0.25, 0.25, 0.25, 0.25, 0.15, 0.25, 0.25, 0.25, 0.25, 0.15], dtype=np.double)
             tau_limit = 7. * np.ones(10, dtype=np.double)
 
     policy = torch.jit.load(args.load_model)

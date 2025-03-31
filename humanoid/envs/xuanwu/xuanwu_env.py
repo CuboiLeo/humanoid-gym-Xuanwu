@@ -381,7 +381,7 @@ class XuanwuFreeEnv(LeggedRobot):
         stance_mask = self._get_gait_phase()
         measured_heights = torch.sum(
             self.rigid_state[:, self.feet_indices, 2] * stance_mask, dim=1) / torch.sum(stance_mask, dim=1)
-        base_height = self.root_states[:, 2] - (measured_heights - 0.05)
+        base_height = self.root_states[:, 2] - (measured_heights - 0.08)
         return torch.exp(-torch.abs(base_height - self.cfg.rewards.base_height_target) * 100)
 
     def _reward_base_acc(self):
@@ -460,7 +460,6 @@ class XuanwuFreeEnv(LeggedRobot):
 
         # Compute swing mask
         swing_mask = 1 - self._get_gait_phase()
-
         # feet height should be closed to target feet height at the peak
         rew_pos = torch.abs(self.feet_height - self.cfg.rewards.target_feet_height) < 0.01
         rew_pos = torch.sum(rew_pos * swing_mask, dim=1)

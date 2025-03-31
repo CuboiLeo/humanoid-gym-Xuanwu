@@ -115,10 +115,10 @@ class XuanwuCfg(LeggedRobotCfg):
 
     class control(LeggedRobotCfg.control):
         # PD Drive parameters:
-        stiffness = {'joint_1': 40.0, 'joint_2': 40.0, 'joint_3': 40.0,
-                     'joint_4': 40.0, 'joint_5': 10.0,
-                     'joint_6': 40.0, 'joint_7': 40.0, 'joint_8': 40.0,
-                     'joint_9': 40.0, 'joint_10': 10.0}
+        stiffness = {'joint_1': 40.0, 'joint_2': 40.0, 'joint_3': 80.0,
+                     'joint_4': 80.0, 'joint_5': 10.0,
+                     'joint_6': 40.0, 'joint_7': 40.0, 'joint_8': 80.0,
+                     'joint_9': 80.0, 'joint_10': 10.0}
         damping = {'joint_1': 0.25, 'joint_2': 0.25, 'joint_3': 0.25,
                      'joint_4': 0.25, 'joint_5': 0.15,
                      'joint_6': 0.25, 'joint_7': 0.25, 'joint_8': 0.25,
@@ -150,15 +150,15 @@ class XuanwuCfg(LeggedRobotCfg):
 
     class domain_rand:
         randomize_friction = True
-        friction_range = [0.1, 2.0]
+        friction_range = [0.1, 1.0]
         randomize_base_mass = True
-        added_mass_range = [-0.2, 0.2]
+        added_mass_range = [-0.5, 0.5]
         push_robots = True
         push_interval_s = 4
         max_push_vel_xy = 0.4
         max_push_ang_vel = 0.4
         # dynamic randomization
-        action_delay = 0.5
+        action_delay = 1.0
         action_noise = 0.02
 
     class commands(LeggedRobotCfg.commands):
@@ -168,32 +168,32 @@ class XuanwuCfg(LeggedRobotCfg):
         heading_command = True  # if true: compute ang vel command from heading error
 
         class ranges:
-            lin_vel_x = [-0.5, 0.5]   # min max [m/s]
-            lin_vel_y = [-0.6, 0.6]   # min max [m/s]
-            ang_vel_yaw = [-0.5, 0.5] # min max [rad/s]
+            lin_vel_x = [-0.3, 0.3]   # min max [m/s]
+            lin_vel_y = [-0.3, 0.3]   # min max [m/s]
+            ang_vel_yaw = [-0.3, 0.3] # min max [rad/s]
             heading = [-3.14, 3.14]
 
     class rewards:
-        base_height_target = 0.55
-        min_dist = 0.12
-        max_dist = 0.24
+        base_height_target = 0.545
+        min_dist = 0.10
+        max_dist = 0.18
         # put some settings here for LLM parameter tuning
         target_joint_pos_scale = 0.17    # rad
-        target_feet_height = 0.06        # m
+        target_feet_height = 0.05        # m
         cycle_time = 0.64             # sec
         # if true negative total rewards are clipped at zero (avoids early termination problems)
         only_positive_rewards = True
         # tracking reward = exp(error*sigma)
         tracking_sigma = 5
-        max_contact_force = 100  # Forces above this value are penalized
+        max_contact_force = 700  # Forces above this value are penalized
 
         class scales:
             # reference motion tracking
             joint_pos = 1.6
-            feet_clearance = 1.
+            feet_clearance = 1.5
             feet_contact_number = 1.2
             # gait
-            feet_air_time = 1.
+            feet_air_time = 1.2
             foot_slip = -0.05
             feet_distance = 0.2
             knee_distance = 0.2

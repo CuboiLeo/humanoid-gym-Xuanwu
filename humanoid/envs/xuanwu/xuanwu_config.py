@@ -115,14 +115,14 @@ class XuanwuCfg(LeggedRobotCfg):
 
     class control(LeggedRobotCfg.control):
         # PD Drive parameters:
-        stiffness = {'joint_1': 40.0, 'joint_2': 40.0, 'joint_3': 80.0,
-                     'joint_4': 80.0, 'joint_5': 10.0,
-                     'joint_6': 40.0, 'joint_7': 40.0, 'joint_8': 80.0,
-                     'joint_9': 80.0, 'joint_10': 10.0}
-        damping = {'joint_1': 0.25, 'joint_2': 0.25, 'joint_3': 0.25,
-                     'joint_4': 0.25, 'joint_5': 0.15,
-                     'joint_6': 0.25, 'joint_7': 0.25, 'joint_8': 0.25,
-                     'joint_9': 0.25, 'joint_10': 0.15}
+        stiffness = {'joint_1': 40.0, 'joint_2': 60.0, 'joint_3': 60.0,
+                     'joint_4': 60.0, 'joint_5': 5.0,
+                     'joint_6': 40.0, 'joint_7': 60.0, 'joint_8': 60.0,
+                     'joint_9': 60.0, 'joint_10': 5.0}
+        damping = {'joint_1': 0.25, 'joint_2': 0.4, 'joint_3': 0.4,
+                     'joint_4': 0.4, 'joint_5': 0.1,
+                     'joint_6': 0.25, 'joint_7': 0.4, 'joint_8': 0.4,
+                     'joint_9': 0.4, 'joint_10': 0.1}
 
         # action scale: target angle = actionScale * action + defaultAngle
         action_scale = 0.25
@@ -152,13 +152,13 @@ class XuanwuCfg(LeggedRobotCfg):
         randomize_friction = True
         friction_range = [0.1, 1.0]
         randomize_base_mass = True
-        added_mass_range = [-0.5, 0.5]
+        added_mass_range = [-0.2, 0.2]
         push_robots = True
-        push_interval_s = 4
+        push_interval_s = 2
         max_push_vel_xy = 0.4
         max_push_ang_vel = 0.4
         # dynamic randomization
-        action_delay = 1.0
+        action_delay = 0.5
         action_noise = 0.02
 
     class commands(LeggedRobotCfg.commands):
@@ -168,9 +168,9 @@ class XuanwuCfg(LeggedRobotCfg):
         heading_command = True  # if true: compute ang vel command from heading error
 
         class ranges:
-            lin_vel_x = [-0.3, 0.3]   # min max [m/s]
-            lin_vel_y = [-0.3, 0.3]   # min max [m/s]
-            ang_vel_yaw = [-0.3, 0.3] # min max [rad/s]
+            lin_vel_x = [-0.4, 0.4]   # min max [m/s]
+            lin_vel_y = [-0.4, 0.4]   # min max [m/s]
+            ang_vel_yaw = [-0.4, 0.4] # min max [rad/s]
             heading = [-3.14, 3.14]
 
     class rewards:
@@ -178,19 +178,19 @@ class XuanwuCfg(LeggedRobotCfg):
         min_dist = 0.10
         max_dist = 0.18
         # put some settings here for LLM parameter tuning
-        target_joint_pos_scale = 0.17    # rad
-        target_feet_height = 0.05        # m
+        target_joint_pos_scale = 0.20    # rad
+        target_feet_height = 0.04        # m
         cycle_time = 0.64             # sec
         # if true negative total rewards are clipped at zero (avoids early termination problems)
         only_positive_rewards = True
         # tracking reward = exp(error*sigma)
         tracking_sigma = 5
-        max_contact_force = 700  # Forces above this value are penalized
+        max_contact_force = 100  # Forces above this value are penalized
 
         class scales:
             # reference motion tracking
             joint_pos = 1.6
-            feet_clearance = 1.5
+            feet_clearance = 1.2
             feet_contact_number = 1.2
             # gait
             feet_air_time = 1.2
@@ -250,7 +250,7 @@ class XuanwuCfgPPO(LeggedRobotCfgPPO):
         policy_class_name = 'ActorCritic'
         algorithm_class_name = 'PPO'
         num_steps_per_env = 60  # per iteration
-        max_iterations = 5001  # number of policy updates
+        max_iterations = 6001  # number of policy updates
 
         # logging
         save_interval = 100  # Please check for potential savings every `save_interval` iterations.

@@ -115,14 +115,14 @@ class XuanwuCfg(LeggedRobotCfg):
 
     class control(LeggedRobotCfg.control):
         # PD Drive parameters:
-        stiffness = {'joint_1': 40.0, 'joint_2': 60.0, 'joint_3': 60.0,
-                     'joint_4': 60.0, 'joint_5': 5.0,
-                     'joint_6': 40.0, 'joint_7': 60.0, 'joint_8': 60.0,
-                     'joint_9': 60.0, 'joint_10': 5.0}
-        damping = {'joint_1': 0.25, 'joint_2': 0.4, 'joint_3': 0.4,
-                     'joint_4': 0.4, 'joint_5': 0.1,
-                     'joint_6': 0.25, 'joint_7': 0.4, 'joint_8': 0.4,
-                     'joint_9': 0.4, 'joint_10': 0.1}
+        stiffness = {'joint_1': 20.0, 'joint_2': 60.0, 'joint_3': 40.0,
+                     'joint_4': 60.0, 'joint_5': 10.0,
+                     'joint_6': 20.0, 'joint_7': 60.0, 'joint_8': 40.0,
+                     'joint_9': 60.0, 'joint_10': 1.0}
+        damping = {'joint_1': 1.0, 'joint_2': 1.5, 'joint_3': 1.5,
+                     'joint_4': 1.5, 'joint_5': 0.5,
+                     'joint_6': 1.0, 'joint_7': 1.5, 'joint_8': 1.5,
+                     'joint_9': 1.5, 'joint_10': 0.5}
 
         # action scale: target angle = actionScale * action + defaultAngle
         action_scale = 0.25
@@ -152,7 +152,7 @@ class XuanwuCfg(LeggedRobotCfg):
         randomize_friction = True
         friction_range = [0.1, 1.0]
         randomize_base_mass = True
-        added_mass_range = [-0.2, 0.2]
+        added_mass_range = [-0.5, 0.5]
         push_robots = True
         push_interval_s = 2
         max_push_vel_xy = 0.4
@@ -168,9 +168,9 @@ class XuanwuCfg(LeggedRobotCfg):
         heading_command = True  # if true: compute ang vel command from heading error
 
         class ranges:
-            lin_vel_x = [-0.4, 0.4]   # min max [m/s]
-            lin_vel_y = [-0.4, 0.4]   # min max [m/s]
-            ang_vel_yaw = [-0.4, 0.4] # min max [rad/s]
+            lin_vel_x = [-0.5, 0.5]   # min max [m/s]
+            lin_vel_y = [-0.5, 0.5]   # min max [m/s]
+            ang_vel_yaw = [-0.5, 0.5] # min max [rad/s]
             heading = [-3.14, 3.14]
 
     class rewards:

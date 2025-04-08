@@ -115,14 +115,14 @@ class XuanwuCfg(LeggedRobotCfg):
 
     class control(LeggedRobotCfg.control):
         # PD Drive parameters:
-        stiffness = {'joint_1': 20.0, 'joint_2': 60.0, 'joint_3': 40.0,
+        stiffness = {'joint_1': 20.0, 'joint_2': 60.0, 'joint_3': 60.0,
                      'joint_4': 60.0, 'joint_5': 10.0,
-                     'joint_6': 20.0, 'joint_7': 60.0, 'joint_8': 40.0,
-                     'joint_9': 60.0, 'joint_10': 1.0}
-        damping = {'joint_1': 1.0, 'joint_2': 1.5, 'joint_3': 1.5,
-                     'joint_4': 1.5, 'joint_5': 0.5,
-                     'joint_6': 1.0, 'joint_7': 1.5, 'joint_8': 1.5,
-                     'joint_9': 1.5, 'joint_10': 0.5}
+                     'joint_6': 20.0, 'joint_7': 60.0, 'joint_8': 60.0,
+                     'joint_9': 60.0, 'joint_10': 10.0}
+        damping = {'joint_1': 1.0, 'joint_2': 2.0, 'joint_3': 2.0,
+                     'joint_4': 2.0, 'joint_5': 0.5,
+                     'joint_6': 1.0, 'joint_7': 2.0, 'joint_8': 2.0,
+                     'joint_9': 2.0, 'joint_10': 0.5}
 
         # action scale: target angle = actionScale * action + defaultAngle
         action_scale = 0.25
@@ -150,9 +150,9 @@ class XuanwuCfg(LeggedRobotCfg):
 
     class domain_rand:
         randomize_friction = True
-        friction_range = [0.1, 1.0]
+        friction_range = [0.1, 2.0]
         randomize_base_mass = True
-        added_mass_range = [-0.5, 0.5]
+        added_mass_range = [-0.2, 0.2]
         push_robots = True
         push_interval_s = 2
         max_push_vel_xy = 0.4
@@ -169,17 +169,17 @@ class XuanwuCfg(LeggedRobotCfg):
 
         class ranges:
             lin_vel_x = [-0.5, 0.5]   # min max [m/s]
-            lin_vel_y = [-0.5, 0.5]   # min max [m/s]
+            lin_vel_y = [-0.6, 0.6]   # min max [m/s]
             ang_vel_yaw = [-0.5, 0.5] # min max [rad/s]
             heading = [-3.14, 3.14]
 
     class rewards:
         base_height_target = 0.545
-        min_dist = 0.10
-        max_dist = 0.18
+        min_dist = 0.12
+        max_dist = 0.24
         # put some settings here for LLM parameter tuning
-        target_joint_pos_scale = 0.20    # rad
-        target_feet_height = 0.04        # m
+        target_joint_pos_scale = 0.17    # rad
+        target_feet_height = 0.06        # m
         cycle_time = 0.64             # sec
         # if true negative total rewards are clipped at zero (avoids early termination problems)
         only_positive_rewards = True
@@ -190,10 +190,10 @@ class XuanwuCfg(LeggedRobotCfg):
         class scales:
             # reference motion tracking
             joint_pos = 1.6
-            feet_clearance = 1.2
+            feet_clearance = 1.
             feet_contact_number = 1.2
             # gait
-            feet_air_time = 1.2
+            feet_air_time = 1.
             foot_slip = -0.05
             feet_distance = 0.2
             knee_distance = 0.2

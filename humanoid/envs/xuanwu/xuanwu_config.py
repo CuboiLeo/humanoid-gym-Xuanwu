@@ -154,7 +154,7 @@ class XuanwuCfg(LeggedRobotCfg):
         randomize_base_mass = True
         added_mass_range = [-0.2, 0.2]
         push_robots = True
-        push_interval_s = 2
+        push_interval_s = 4
         max_push_vel_xy = 0.4
         max_push_ang_vel = 0.4
         # dynamic randomization
@@ -174,18 +174,18 @@ class XuanwuCfg(LeggedRobotCfg):
             heading = [-3.14, 3.14]
 
     class rewards:
-        base_height_target = 0.545
-        min_dist = 0.12
-        max_dist = 0.24
+        base_height_target = 0.55
+        min_dist = 0.10
+        max_dist = 0.18
         # put some settings here for LLM parameter tuning
         target_joint_pos_scale = 0.17    # rad
-        target_feet_height = 0.06        # m
+        target_feet_height = 0.03        # m
         cycle_time = 0.64             # sec
         # if true negative total rewards are clipped at zero (avoids early termination problems)
         only_positive_rewards = True
         # tracking reward = exp(error*sigma)
         tracking_sigma = 5
-        max_contact_force = 100  # Forces above this value are penalized
+        max_contact_force = 80  # Forces above this value are penalized
 
         class scales:
             # reference motion tracking
@@ -200,10 +200,10 @@ class XuanwuCfg(LeggedRobotCfg):
             # contact
             feet_contact_forces = -0.01
             # vel tracking
-            tracking_lin_vel = 1.2
+            tracking_lin_vel = 1.4
             tracking_ang_vel = 1.1
             vel_mismatch_exp = 0.5  # lin_z; ang x,y
-            low_speed = 0.2
+            low_speed = 0.4
             track_vel_hard = 0.5
             # base pos
             default_joint_pos = 0.5
@@ -250,7 +250,7 @@ class XuanwuCfgPPO(LeggedRobotCfgPPO):
         policy_class_name = 'ActorCritic'
         algorithm_class_name = 'PPO'
         num_steps_per_env = 60  # per iteration
-        max_iterations = 6001  # number of policy updates
+        max_iterations = 3001  # number of policy updates
 
         # logging
         save_interval = 100  # Please check for potential savings every `save_interval` iterations.

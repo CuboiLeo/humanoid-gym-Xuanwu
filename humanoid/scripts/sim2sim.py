@@ -219,7 +219,7 @@ def run_mujoco(policy, cfg):
                             target_dq, dq, cfg.robot_config.kds)  # Calc torques
             tau = np.clip(tau, -cfg.robot_config.tau_limit, cfg.robot_config.tau_limit)  # Clamp torques
             data.ctrl = tau
-            writer.writerow([data.time] + tau.tolist())
+            writer.writerow([data.time] + target_q.tolist())
 
             mujoco.mj_step(model, data)
             viewer.render()

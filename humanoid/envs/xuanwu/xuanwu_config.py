@@ -80,7 +80,7 @@ class XuanwuCfg(LeggedRobotCfg):
         terrain_width = 8.
         num_rows = 20  # number of terrain rows (levels)
         num_cols = 20  # number of terrain cols (types)
-        max_init_terrain_level = 3 # starting curriculum state # 10
+        max_init_terrain_level = 10 # starting curriculum state # 10
         # plane; obstacles; uniform; slope_up; slope_down, stair_up, stair_down
         terrain_proportions = [0.4, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
         restitution = 0.
@@ -119,10 +119,10 @@ class XuanwuCfg(LeggedRobotCfg):
                      'joint_4': 60.0, 'joint_5': 10.0,
                      'joint_6': 20.0, 'joint_7': 60.0, 'joint_8': 60.0,
                      'joint_9': 60.0, 'joint_10': 10.0}
-        damping = {'joint_1': 1.0, 'joint_2': 2.0, 'joint_3': 2.0,
-                     'joint_4': 2.0, 'joint_5': 0.5,
-                     'joint_6': 1.0, 'joint_7': 2.0, 'joint_8': 2.0,
-                     'joint_9': 2.0, 'joint_10': 0.5}
+        damping = {'joint_1': 0.2, 'joint_2': 0.25, 'joint_3': 0.25,
+                     'joint_4': 0.25, 'joint_5': 0.1,
+                     'joint_6': 0.2, 'joint_7': 0.25, 'joint_8': 0.25,
+                     'joint_9': 0.25, 'joint_10': 0.1}
 
         # action scale: target angle = actionScale * action + defaultAngle
         action_scale = 0.25
@@ -150,9 +150,9 @@ class XuanwuCfg(LeggedRobotCfg):
 
     class domain_rand:
         randomize_friction = True
-        friction_range = [0.1, 2.0]
+        friction_range = [0.1, 1.0]
         randomize_base_mass = True
-        added_mass_range = [-0.2, 0.2]
+        added_mass_range = [-0.5, 0.5]
         push_robots = True
         push_interval_s = 4
         max_push_vel_xy = 0.4
@@ -169,14 +169,14 @@ class XuanwuCfg(LeggedRobotCfg):
 
         class ranges:
             lin_vel_x = [-0.5, 0.5]   # min max [m/s]
-            lin_vel_y = [-0.6, 0.6]   # min max [m/s]
+            lin_vel_y = [-0.5, 0.5]   # min max [m/s]
             ang_vel_yaw = [-0.5, 0.5] # min max [rad/s]
             heading = [-3.14, 3.14]
 
     class rewards:
-        base_height_target = 0.55
-        min_dist = 0.10
-        max_dist = 0.18
+        base_height_target = 0.545
+        min_dist = 0.12
+        max_dist = 0.24
         # put some settings here for LLM parameter tuning
         target_joint_pos_scale = 0.17    # rad
         target_feet_height = 0.03        # m
@@ -190,10 +190,10 @@ class XuanwuCfg(LeggedRobotCfg):
         class scales:
             # reference motion tracking
             joint_pos = 1.6
-            feet_clearance = 1.
+            feet_clearance = 1.0
             feet_contact_number = 1.2
             # gait
-            feet_air_time = 1.
+            feet_air_time = 1.0
             foot_slip = -0.05
             feet_distance = 0.2
             knee_distance = 0.2
@@ -230,7 +230,7 @@ class XuanwuCfg(LeggedRobotCfg):
 
 
 class XuanwuCfgPPO(LeggedRobotCfgPPO):
-    seed = 5
+    seed = 666
     runner_class_name = 'OnPolicyRunner'   # DWLOnPolicyRunner
 
     class policy:

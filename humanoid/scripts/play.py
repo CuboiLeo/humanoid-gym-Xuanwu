@@ -50,8 +50,8 @@ def play(args):
     # override some parameters for testing
     env_cfg.env.num_envs = min(env_cfg.env.num_envs, 1)
     env_cfg.sim.max_gpu_contact_pairs = 2**10
-    env_cfg.terrain.mesh_type = 'trimesh'
-    # env_cfg.terrain.mesh_type = 'plane'
+    # env_cfg.terrain.mesh_type = 'trimesh'
+    env_cfg.terrain.mesh_type = 'plane'
     env_cfg.terrain.num_rows = 5
     env_cfg.terrain.num_cols = 5
     env_cfg.terrain.curriculum = False     
@@ -62,8 +62,7 @@ def play(args):
     env_cfg.noise.curriculum = False
     env_cfg.noise.noise_level = 0.5
 
-
-    train_cfg.seed = 123145
+    train_cfg.seed = 666
     print("train_cfg.runner_class_name:", train_cfg.runner_class_name)
 
     # prepare environment
@@ -79,7 +78,7 @@ def play(args):
     
     # export policy as a jit module (used to run it from C++)
     if EXPORT_POLICY:
-        path = os.path.join(LEGGED_GYM_ROOT_DIR, 'logs', train_cfg.runner.experiment_name, 'exported', 'policies')
+        path = os.path.join(LEGGED_GYM_ROOT_DIR, 'logs', 'exported', 'policies')
         export_policy_as_jit(ppo_runner.alg.actor_critic, path)
         print('Exported policy as jit script to: ', path)
 
@@ -118,7 +117,7 @@ def play(args):
         
         if FIX_COMMAND:
             env.commands[:, 0] = 0.    # 1.0
-            env.commands[:, 1] = 0.
+            env.commands[:, 1] = 0.5
             env.commands[:, 2] = 0.
             env.commands[:, 3] = 0.
 

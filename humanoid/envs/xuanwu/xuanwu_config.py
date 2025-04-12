@@ -119,10 +119,10 @@ class XuanwuCfg(LeggedRobotCfg):
                      'joint_4': 60.0, 'joint_5': 10.0,
                      'joint_6': 20.0, 'joint_7': 60.0, 'joint_8': 60.0,
                      'joint_9': 60.0, 'joint_10': 10.0}
-        damping = {'joint_1': 0.2, 'joint_2': 0.25, 'joint_3': 0.25,
-                     'joint_4': 0.25, 'joint_5': 0.1,
-                     'joint_6': 0.2, 'joint_7': 0.25, 'joint_8': 0.25,
-                     'joint_9': 0.25, 'joint_10': 0.1}
+        damping = {'joint_1': 0.5, 'joint_2': 1.0, 'joint_3': 1.0,
+                     'joint_4': 1.0, 'joint_5': 0.2,
+                     'joint_6': 0.5, 'joint_7': 1.0, 'joint_8': 1.0,
+                     'joint_9': 1.0, 'joint_10': 0.2}
 
         # action scale: target angle = actionScale * action + defaultAngle
         action_scale = 0.25
@@ -175,10 +175,10 @@ class XuanwuCfg(LeggedRobotCfg):
 
     class rewards:
         base_height_target = 0.545
-        min_dist = 0.12
-        max_dist = 0.24
+        min_dist = 0.14
+        max_dist = 0.20
         # put some settings here for LLM parameter tuning
-        target_joint_pos_scale = 0.17    # rad
+        target_joint_pos_scale = 0.20    # rad
         target_feet_height = 0.03        # m
         cycle_time = 0.64             # sec
         # if true negative total rewards are clipped at zero (avoids early termination problems)
@@ -190,17 +190,17 @@ class XuanwuCfg(LeggedRobotCfg):
         class scales:
             # reference motion tracking
             joint_pos = 1.6
-            feet_clearance = 1.0
+            feet_clearance = 1.2
             feet_contact_number = 1.2
             # gait
-            feet_air_time = 1.0
+            feet_air_time = 1.2
             foot_slip = -0.05
             feet_distance = 0.2
             knee_distance = 0.2
             # contact
             feet_contact_forces = -0.01
             # vel tracking
-            tracking_lin_vel = 1.4
+            tracking_lin_vel = 1.8
             tracking_ang_vel = 1.1
             vel_mismatch_exp = 0.5  # lin_z; ang x,y
             low_speed = 0.4

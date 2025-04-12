@@ -115,14 +115,14 @@ class XuanwuCfg(LeggedRobotCfg):
 
     class control(LeggedRobotCfg.control):
         # PD Drive parameters:
-        stiffness = {'joint_1': 20.0, 'joint_2': 60.0, 'joint_3': 60.0,
-                     'joint_4': 60.0, 'joint_5': 10.0,
-                     'joint_6': 20.0, 'joint_7': 60.0, 'joint_8': 60.0,
-                     'joint_9': 60.0, 'joint_10': 10.0}
-        damping = {'joint_1': 0.5, 'joint_2': 1.0, 'joint_3': 1.0,
-                     'joint_4': 1.0, 'joint_5': 0.2,
-                     'joint_6': 0.5, 'joint_7': 1.0, 'joint_8': 1.0,
-                     'joint_9': 1.0, 'joint_10': 0.2}
+        stiffness = {'joint_1': 10.0, 'joint_2': 30.0, 'joint_3': 40.0,
+                     'joint_4': 40.0, 'joint_5': 10.0,
+                     'joint_6': 10.0, 'joint_7': 30.0, 'joint_8': 40.0,
+                     'joint_9': 40.0, 'joint_10': 10.0}
+        damping = {'joint_1': 0.2, 'joint_2': 0.3, 'joint_3': 0.5,
+                     'joint_4': 0.5, 'joint_5': 0.2,
+                     'joint_6': 0.2, 'joint_7': 0.3, 'joint_8': 0.5,
+                     'joint_9': 0.5, 'joint_10': 0.2}
 
         # action scale: target angle = actionScale * action + defaultAngle
         action_scale = 0.25
@@ -250,7 +250,7 @@ class XuanwuCfgPPO(LeggedRobotCfgPPO):
         policy_class_name = 'ActorCritic'
         algorithm_class_name = 'PPO'
         num_steps_per_env = 60  # per iteration
-        max_iterations = 3001  # number of policy updates
+        max_iterations = 5001  # number of policy updates
 
         # logging
         save_interval = 100  # Please check for potential savings every `save_interval` iterations.

@@ -115,14 +115,14 @@ class XuanwuCfg(LeggedRobotCfg):
 
     class control(LeggedRobotCfg.control):
         # PD Drive parameters:
-        stiffness = {'joint_1': 10.0, 'joint_2': 30.0, 'joint_3': 40.0,
-                     'joint_4': 40.0, 'joint_5': 10.0,
-                     'joint_6': 10.0, 'joint_7': 30.0, 'joint_8': 40.0,
-                     'joint_9': 40.0, 'joint_10': 10.0}
-        damping = {'joint_1': 0.2, 'joint_2': 0.3, 'joint_3': 0.5,
-                     'joint_4': 0.5, 'joint_5': 0.2,
-                     'joint_6': 0.2, 'joint_7': 0.3, 'joint_8': 0.5,
-                     'joint_9': 0.5, 'joint_10': 0.2}
+        stiffness = {'joint_1': 40.0, 'joint_2': 40.0, 'joint_3': 80.0,
+                     'joint_4': 80.0, 'joint_5': 15.0,
+                     'joint_6': 40.0, 'joint_7': 40.0, 'joint_8': 80.0,
+                     'joint_9': 80.0, 'joint_10': 15.0}
+        damping = {'joint_1': 0.25, 'joint_2': 0.25, 'joint_3': 0.25,
+                     'joint_4': 0.25, 'joint_5': 0.25,
+                     'joint_6': 0.25, 'joint_7': 0.25, 'joint_8': 0.25,
+                     'joint_9': 0.25, 'joint_10': 0.25}
 
         # action scale: target angle = actionScale * action + defaultAngle
         action_scale = 0.25
@@ -150,12 +150,12 @@ class XuanwuCfg(LeggedRobotCfg):
 
     class domain_rand:
         randomize_friction = True
-        friction_range = [0.1, 1.0]
+        friction_range = [0.1, 2.0]
         randomize_base_mass = True
-        added_mass_range = [-0.5, 0.5]
+        added_mass_range = [-1.0, 1.0]
         push_robots = True
         push_interval_s = 4
-        max_push_vel_xy = 0.4
+        max_push_vel_xy = 0.2
         max_push_ang_vel = 0.4
         # dynamic randomization
         action_delay = 0.5
@@ -168,9 +168,9 @@ class XuanwuCfg(LeggedRobotCfg):
         heading_command = True  # if true: compute ang vel command from heading error
 
         class ranges:
-            lin_vel_x = [-0.5, 0.5]   # min max [m/s]
-            lin_vel_y = [-0.5, 0.5]   # min max [m/s]
-            ang_vel_yaw = [-0.5, 0.5] # min max [rad/s]
+            lin_vel_x = [-0.3, 0.3]   # min max [m/s]
+            lin_vel_y = [-0.3, 0.3]   # min max [m/s]
+            ang_vel_yaw = [-0.3, 0.3] # min max [rad/s]
             heading = [-3.14, 3.14]
 
     class rewards:
@@ -178,32 +178,32 @@ class XuanwuCfg(LeggedRobotCfg):
         min_dist = 0.14
         max_dist = 0.20
         # put some settings here for LLM parameter tuning
-        target_joint_pos_scale = 0.20    # rad
-        target_feet_height = 0.03        # m
+        target_joint_pos_scale = 0.17    # rad
+        target_feet_height = 0.02        # m
         cycle_time = 0.64             # sec
         # if true negative total rewards are clipped at zero (avoids early termination problems)
         only_positive_rewards = True
         # tracking reward = exp(error*sigma)
         tracking_sigma = 5
-        max_contact_force = 80  # Forces above this value are penalized
+        max_contact_force = 700  # Forces above this value are penalized
 
         class scales:
             # reference motion tracking
             joint_pos = 1.6
-            feet_clearance = 1.2
+            feet_clearance = 1.
             feet_contact_number = 1.2
             # gait
-            feet_air_time = 1.2
+            feet_air_time = 1.
             foot_slip = -0.05
             feet_distance = 0.2
             knee_distance = 0.2
             # contact
             feet_contact_forces = -0.01
             # vel tracking
-            tracking_lin_vel = 1.8
+            tracking_lin_vel = 1.2
             tracking_ang_vel = 1.1
             vel_mismatch_exp = 0.5  # lin_z; ang x,y
-            low_speed = 0.4
+            low_speed = 0.2
             track_vel_hard = 0.5
             # base pos
             default_joint_pos = 0.5
@@ -250,7 +250,7 @@ class XuanwuCfgPPO(LeggedRobotCfgPPO):
         policy_class_name = 'ActorCritic'
         algorithm_class_name = 'PPO'
         num_steps_per_env = 60  # per iteration
-        max_iterations = 5001  # number of policy updates
+        max_iterations = 8001  # number of policy updates
 
         # logging
         save_interval = 100  # Please check for potential savings every `save_interval` iterations.

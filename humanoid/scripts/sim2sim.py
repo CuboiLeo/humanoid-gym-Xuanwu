@@ -219,7 +219,7 @@ def run_mujoco(policy, cfg):
                             target_dq, dq, cfg.robot_config.kds)  # Calc torques
             tau = np.clip(tau, -cfg.robot_config.tau_limit, cfg.robot_config.tau_limit)  # Clamp torques
             data.ctrl = tau
-            writer.writerow([data.time] + tau.tolist())
+            writer.writerow([data.time] + target_q.tolist())
 
             mujoco.mj_step(model, data)
             viewer.render()
@@ -251,8 +251,8 @@ if __name__ == '__main__':
             decimation = 10
 
         class robot_config:
-            kps = np.array([20, 60, 60, 60, 10, 20, 60, 60, 60, 10], dtype=np.double)
-            kds = np.array([1.0, 2.0, 2.0, 2.0, 0.5, 1.0, 2.0, 2.0, 2.0, 0.5], dtype=np.double)
+            kps = np.array([40, 40, 60, 60, 10, 40, 40, 60, 60, 10], dtype=np.double)
+            kds = np.array([0.25, 0.25, 0.25, 0.25, 0.15, 0.25, 0.25, 0.25, 0.25, 0.15], dtype=np.double)
             tau_limit = 7. * np.ones(10, dtype=np.double)
 
     policy = torch.jit.load(args.load_model)
